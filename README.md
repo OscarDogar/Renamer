@@ -1,5 +1,5 @@
 # Renamer
-A simple renamer for your TV shows and programs (you can also change the name of your subtitles)
+A simple renamer for your TV shows and series (you can also change the name of your subtitles)
 
 ## Requirements
 - pip install python-dotenv python-decouple requests

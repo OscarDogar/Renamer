@@ -1,0 +1,11 @@
+{
+    "APIs":{
+        "IMDB_URL": "https://api.tvmaze.com/lookup/shows?imdb={}",
+        "TV_SHOWS_URL": "https://api.tvmaze.com/search/shows?q={}",
+        "TV_SHOWS_EPISODE_URL": "https://api.tvmaze.com/shows/{}/episodebynumber?season={}&number={}"
+    },
+    "VALID_EXTENSIONS": {
+        "VIDEO": [".mkv", ".mp4"],
+        "SUBTITLE": [".srt", ".idx", ".sub"]
+    }
+}

@@ -14,12 +14,12 @@ fullPath = input("Enter the full path of the folder where the episodes or subs a
 option = input("Select if you want to search by name or imdb id\n1. By Name\n2. By IMDb Id\nType: ")
 name = ""
 imdb = ""
-while(option != "1" and option != "2" or "name".lower() not in option.lower() or "imdb".lower() not in option.lower()):
-    if option == "1" or "name".lower() in option.lower():
+while(option.strip() != "1" and option.strip() != "2" or "name".lower() not in option.lower() or "imdb".lower() not in option.lower()):
+    if option.strip() == "1" or "name".lower() in option.lower():
         print("Please make sure it is the correct name otherwise the names will be overwritten")
         name = input("Enter the name of the show (example The Big Bang Theory): ")
         break
-    elif option == "2" or "imdb".lower() in option.lower():
+    elif option.strip() == "2" or "imdb".lower() in option.lower():
         imdb = input("Enter IMDB ID (example tt0898266): ")
         break
     else:
@@ -74,7 +74,7 @@ def rename(id, name):
                     seasonInfo = file[positions[0]:positions[1]].upper()
                     #TODO Give users the option to save the name in the season-episode format of their choice
                     if "S" in seasonInfo:
-                        seasonNumber = seasonInfo[seasonInfo.index("S"):3]
+                        seasonNumber = seasonInfo[seasonInfo.index("S")+1:3]
                         episodeNumber = seasonInfo[seasonInfo.index("E")+1:len(seasonInfo)]
                     elif "X" in seasonInfo:
                         seasonNumber = seasonInfo[0:seasonInfo.index("X")]
@@ -84,7 +84,7 @@ def rename(id, name):
                         seasonInfo = "S" + seasonNumber + "E" + episodeNumber
                     else:
                         seasonNumber = "01"
-                        episodeNumber = seasonInfo[1:3]
+                        episodeNumber = seasonInfo[seasonInfo.index("E")+1:3]
                     episodeInfo = requests.request("GET", TV_SHOWS_EPISODE_URL.format(id, seasonNumber, episodeNumber))
                     if episodeInfo.status_code == 200:
                         responseEpisodeInfo = episodeInfo.json()
@@ -143,14 +143,20 @@ def main():
                 rename(id, name)
             else:
                 print("No shows found")
+                print("Please check the name or IMDb id and try again")
                 exit()
         else:
             if info.status_code == 404:
                 print("The show was not found")
+                print("Please check the name or IMDb id and try again")
             else:
                 print("Error: {}".format(info.status_code))
     except Exception as err:
-        print(err)
+        if FileNotFoundError:
+            print("The path was not found")
+        else:
+            print(err)
 
 if __name__ == '__main__':
     main()
+    input("Press enter to exit")

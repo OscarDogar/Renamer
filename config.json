@@ -6,6 +6,14 @@
     },
     "VALID_EXTENSIONS": {
         "VIDEO": [".mkv", ".mp4"],
-        "SUBTITLE": [".srt", ".idx", ".sub"]
+        "SUBTITLE": [".srt", ".idx", ".sub", ".ass"]
+    },
+    "REGEX": {
+        "IMDB_ID": "tt\\d{7,9}$",
+        "ACCEPTED_NAMES":[
+            "[Ss](\\d{1,2})[Ee](\\d{1,2})",
+            "[Ee](\\d{1,2})",
+            "\\[\\d{1,2}\\]"
+        ]
     }
 }

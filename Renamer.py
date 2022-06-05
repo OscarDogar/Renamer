@@ -1,5 +1,4 @@
 import os, requests, re, json
-from decouple import config
 
 def findPath(name):
     path=os.getcwd()
@@ -10,6 +9,7 @@ def findPath(name):
 CONFIG_FILE = json.load(open(findPath('config.json')))
 # name = "The Big Bang Theory"
 # imdb = "tt0898266":
+fullPath = input("Enter the full path of the folder where the episodes or subs are located: ")
 option = input("Select if you want to search by name or imdb id\n1. By Name\n2. By IMDb Id\nType: ")
 name = ""
 imdb = ""
@@ -49,9 +49,8 @@ else:
 TV_SHOWS_EPISODE_URL = CONFIG_FILE["APIs"]["TV_SHOWS_EPISODE_URL"]#.format(ID, season, episode)
 
 def rename(id, name):
-    fullPath = config("FULL_PATH") # Example: C:\Program Files\WindowsPowerShell The episodes must be in this folder
+    subsExtension = ""
     if "subs" in fullPath.lower() or "subtitle" in name.lower():
-        subsExtension = ""
         subsExtension = input("Enter the subtitle language: (example: en, spa, fr, etc) or leave it empty if you don't want any specific language: ")
     path = os.chdir(fullPath)
     VALID_VIDEO_EXTENSIONS = CONFIG_FILE["VALID_EXTENSIONS"]["VIDEO"]
@@ -62,14 +61,22 @@ def rename(id, name):
         if dot != -1: ## if there is a dot
             extension = file[dot:]
             if extension in VALID_VIDEO_EXTENSIONS or extension in VALID_SUBTITLE_EXTENSIONS:
-                regex = "[Ss]\d{2}[Ee]\d{2}"
-                regexResult = re.search(regex, file)
+                ACCEPTED_NAMES = CONFIG_FILE["REGEX"]["ACCEPTED_NAMES"]
+                regexResult = None
+                for regex in ACCEPTED_NAMES:
+                    regexResult = re.search(regex, file)
+                    if regexResult:
+                        break
                 namesErrors = []
                 if regexResult:
                     positions = regexResult.span()
                     seasonInfo = file[positions[0]:positions[1]].upper()
-                    seasonNumber = seasonInfo[1:3]
-                    episodeNumber = seasonInfo[4:6]
+                    if "s" in seasonInfo.lower():
+                        seasonNumber = seasonInfo[1:3]
+                        episodeNumber = seasonInfo[4:6]
+                    else:
+                        seasonNumber = "01"
+                        episodeNumber = seasonInfo[1:3]
                     episodeInfo = requests.request("GET", TV_SHOWS_EPISODE_URL.format(id, seasonNumber, episodeNumber))
                     if episodeInfo.status_code == 200:
                         responseEpisodeInfo = episodeInfo.json()

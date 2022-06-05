@@ -9,6 +9,7 @@ def findPath(name):
 CONFIG_FILE = json.load(open(findPath('config.json')))
 # name = "The Big Bang Theory"
 # imdb = "tt0898266":
+# TODO Add the ability to search movies 
 fullPath = input("Enter the full path of the folder where the episodes or subs are located: ")
 option = input("Select if you want to search by name or imdb id\n1. By Name\n2. By IMDb Id\nType: ")
 name = ""
@@ -50,7 +51,7 @@ TV_SHOWS_EPISODE_URL = CONFIG_FILE["APIs"]["TV_SHOWS_EPISODE_URL"]#.format(ID, s
 
 def rename(id, name):
     subsExtension = ""
-    if "subs" in fullPath.lower() or "subtitle" in name.lower():
+    if "subs" in fullPath.lower() or "subtitle" in fullPath.lower():
         subsExtension = input("Enter the subtitle language: (example: en, spa, fr, etc) or leave it empty if you don't want any specific language: ")
     path = os.chdir(fullPath)
     VALID_VIDEO_EXTENSIONS = CONFIG_FILE["VALID_EXTENSIONS"]["VIDEO"]
@@ -71,9 +72,16 @@ def rename(id, name):
                 if regexResult:
                     positions = regexResult.span()
                     seasonInfo = file[positions[0]:positions[1]].upper()
-                    if "s" in seasonInfo.lower():
-                        seasonNumber = seasonInfo[1:3]
-                        episodeNumber = seasonInfo[4:6]
+                    #TODO Give users the option to save the name in the season-episode format of their choice
+                    if "S" in seasonInfo:
+                        seasonNumber = seasonInfo[seasonInfo.index("S"):3]
+                        episodeNumber = seasonInfo[seasonInfo.index("E")+1:len(seasonInfo)]
+                    elif "X" in seasonInfo:
+                        seasonNumber = seasonInfo[0:seasonInfo.index("X")]
+                        episodeNumber = seasonInfo[seasonInfo.index("X")+1:len(seasonInfo)]
+                        if len(seasonNumber) == 1:
+                            seasonNumber = "0" + seasonNumber
+                        seasonInfo = "S" + seasonNumber + "E" + episodeNumber
                     else:
                         seasonNumber = "01"
                         episodeNumber = seasonInfo[1:3]

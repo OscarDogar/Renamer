@@ -15,6 +15,10 @@ A simple renamer for your TV shows and series (you can also change the name of y
   - Example: *The Big Bang Theory E01*
 - If you want to rename your subtitles, they must be in a folder called *Subtitles* or *Subs*
 
+## Installation
+Run the Setup and inside the Renamer folder run the .exe file
+- You can find the lastest version here: https://github.com/OscarDogar/Renamer/releases 
+
 ## Result
 - With all the considerations, the result would be this: *The Big Bang Theory S01E01 Pilot* (for each episode the name changes) 
 - If the serie has only one season, the result would be this: *The Big Bang Theory E01 Pilot* (for each episode the name changes) 

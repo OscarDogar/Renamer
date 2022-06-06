@@ -6,7 +6,17 @@ def findPath(name):
         if name in files:
             return os.path.join(root, name)
 
-CONFIG_FILE = json.load(open(findPath('config.json')))
+try:
+    configError = None
+    CONFIG_FILE = json.load(open(findPath('config.json')))
+except Exception as err:
+    configError = err
+finally:
+    if configError:
+        CONFIG_URL = "https://raw.githubusercontent.com/OscarDogar/Renamer/main/config.json"
+        ConfigResponse = requests.get(CONFIG_URL)
+        CONFIG_FILE = ConfigResponse.json()
+
 # name = "The Big Bang Theory"
 # imdb = "tt0898266":
 # TODO Add the ability to search movies 

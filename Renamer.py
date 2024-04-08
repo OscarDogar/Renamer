@@ -10,12 +10,10 @@ try:
     configError = None
     CONFIG_FILE = json.load(open(findPath('config.json')))
 except Exception as err:
-    configError = err
-finally:
-    if configError:
-        CONFIG_URL = "https://raw.githubusercontent.com/OscarDogar/Renamer/main/config.json"
-        ConfigResponse = requests.get(CONFIG_URL)
-        CONFIG_FILE = ConfigResponse.json()
+    CONFIG_URL = "https://raw.githubusercontent.com/OscarDogar/Renamer/main/config.json"
+    ConfigResponse = requests.get(CONFIG_URL)
+    CONFIG_FILE = ConfigResponse.json()
+        
 
 # name = "The Big Bang Theory"
 # imdb = "tt0898266":
@@ -63,7 +61,9 @@ def rename(id, name):
     subsExtension = ""
     if "subs" in fullPath.lower() or "subtitle" in fullPath.lower():
         subsExtension = input("Enter the subtitle language: (example: en, spa, fr, etc) or leave it empty if you don't want any specific language: ")
-    path = os.chdir(fullPath)
+    os.chdir(fullPath)
+    path = os.getcwd()
+    
     VALID_VIDEO_EXTENSIONS = CONFIG_FILE["VALID_EXTENSIONS"]["VIDEO"]
     VALID_SUBTITLE_EXTENSIONS = CONFIG_FILE["VALID_EXTENSIONS"]["SUBTITLE"]
     for file in os.listdir(path):
@@ -132,6 +132,7 @@ def main():
             if len(response) == 1 and type(response) == list:
                 id = response[0]["show"]["id"]
                 name = response[0]["show"]["name"]
+                name = re.sub(r'[^\w\s]', ' ', name.replace(":", ""))
                 rename(id, name)
             elif len(response) > 1 and type(response) == list:
                 if year.isnumeric():
@@ -143,6 +144,7 @@ def main():
                             flag = True
                             break  
                     if flag:
+                        name = re.sub(r'[^\w\s]', ' ',  name.replace(":", ""))
                         rename(id, name)
                 else:
                     print("There is more than one option, please specify a release year as follows: ({} 2016) or use the IMDb search".format(name))
@@ -150,6 +152,7 @@ def main():
             elif len(response) > 1 and type(response) == dict:
                 id = response["id"]
                 name = response["name"]
+                name = re.sub(r'[^\w\s]', ' ',  name.replace(":", ""))
                 rename(id, name)
             else:
                 print("No shows found")

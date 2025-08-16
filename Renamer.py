@@ -104,11 +104,11 @@ def rename(id, name):
                         
                         if extension in VALID_SUBTITLE_EXTENSIONS:
                             if subsExtension != "":
-                                fullName = "{} {} {}.{}{}".format(name, seasonInfo, episodeName, subsExtension, extension)
+                                fullName = "{} - {} - {}.{}{}".format(name, seasonInfo, episodeName, subsExtension, extension)
                             else:
-                                fullName = "{} {} {}{}".format(name, seasonInfo, episodeName, extension)
+                                fullName = "{} - {} - {}{}".format(name, seasonInfo, episodeName, extension)
                         else:
-                            fullName = "{} {} {}{}".format(name, seasonInfo, episodeName, extension)
+                            fullName = "{} - {} - {}{}".format(name, seasonInfo, episodeName, extension)
                         if os.path.isfile(fullName):
                             # print("{} is fine".format(fullName))
                             continue
